@@ -1,11 +1,10 @@
-// number define the "engineering discipline"
-1:
+Business modelling:
 	1)System users
-2:
+Requirements:
 	1)Glossary
 	2)System requirements
 	3)Use-case model
-3:-
-4:-
-5:-
-6:-
+Analysis and design:-
+Implementation:-
+Test:-
+Deployment:-
