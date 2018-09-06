@@ -1,6 +1,6 @@
 #Artifacts:
 	Business modelling:
-		1)Ssystem users
+		1)system users
 		2)glossary
 		3)business model
 	Requirements:
