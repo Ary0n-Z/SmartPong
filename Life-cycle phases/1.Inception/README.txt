@@ -1,10 +1,12 @@
-Artifacts:
+#Artifacts:
 	Business modelling:
-		1)System users
+		1)Ssystem users
+		2)glossary
+		3)business model
 	Requirements:
-		1)Glossary
-		2)System requirements
-		3)Use-case model
+		
+		2)system requirements
+		3)use-case model
 	Analysis and design:-
 	Implementation:-
 	Test:-
