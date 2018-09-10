@@ -1,4 +1,5 @@
-# Current phase: Inception
+# SmartPong
+## Current phase: Inception
 
 Coursework for technology of software engineering
 
