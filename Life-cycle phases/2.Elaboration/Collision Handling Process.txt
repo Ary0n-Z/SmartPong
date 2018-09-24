@@ -1,0 +1,18 @@
+Collision Handling
+
+Case 1:
+    Top / Bottom border
+    if (ball.Y == topBorder.Y ± ballSize
+     || ball.Y == bottomBorder.Y ± ballSize)
+        the angle of incidence equals the angle of reflection
+
+Case 2:
+    Left / Right border
+    if (ball.X == leftBorder.X ± ballSize ± gateOffset
+     || ball.X == rightBorder.Y ± ballSize ± gateOffset)
+        Score()
+
+Case 3:
+    Left / Right pad
+    if (ball.X == pad.X ± ballSize && ball.Y > pad.BottomY && ball.Y < pad.UpperY)
+        the angle of incidence equals the angle of reflection ± (padFallPoint / padSizeY)
