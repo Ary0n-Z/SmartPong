@@ -1,5 +1,5 @@
 # SmartPong
-## Current phase: Inception
+## Current phase: Elaboration
 
 Coursework for technology of software engineering
 
