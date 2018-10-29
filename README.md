@@ -1,5 +1,5 @@
 # SmartPong
-## Current phase: Elaboration
+## Current phase: Construction phase
 
 Coursework for technology of software engineering
 
