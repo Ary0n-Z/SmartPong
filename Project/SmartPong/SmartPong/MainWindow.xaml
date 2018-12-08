@@ -1,0 +1,65 @@
+﻿<Window x:Class="SmartPong.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmartPong"
+        xmlns:gattr="clr-namespace:SmartPong.Model.GameObjects"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+
+    <Window.DataContext>
+        <local:ViewModel></local:ViewModel>
+    </Window.DataContext>
+
+    <Grid Background="Gray">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"></RowDefinition>
+            <RowDefinition Height="90*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel x:Name="GameField" 
+                    MouseDown="GetGameFieldFocus"
+                    SizeChanged="GameFieldSizeChanged"
+                    FocusManager.IsFocusScope="True" 
+                    Grid.Row="1"
+                    Background="White" 
+                    Margin="1">
+            <StackPanel.InputBindings>
+                <KeyBinding 
+                    Key="Up"
+                    Command="{Binding ArrowUpCommand}"></KeyBinding>
+                <KeyBinding 
+                    Key="Down"
+                    Command="{Binding ArrowDownCommand}"></KeyBinding>
+            </StackPanel.InputBindings>
+            <Canvas>
+               <Border 
+                    BorderBrush="Black" 
+                    BorderThickness="1"
+                    Height="{Binding GameAttr.PlayerPaddle.Height}"
+                    Width="{Binding GameAttr.PlayerPaddle.Width}"
+                    Canvas.Left="{Binding GameAttr.ObjectsPos.PlayerPaddle.X}" 
+                    Canvas.Top="{Binding GameAttr.ObjectsPos.PlayerPaddle.Y}"/>
+                <Border 
+                    BorderBrush="Black" 
+                    BorderThickness="1"
+                    Height="{Binding GameAttr.NewralNetworkPaddle.Height}"
+                    Width="{Binding GameAttr.NewralNetworkPaddle.Width}"
+                    Canvas.Left="{Binding GameAttr.ObjectsPos.NNPadle.X}" 
+                    Canvas.Top="{Binding GameAttr.ObjectsPos.NNPadle.Y}"/>
+                <Border 
+                    x:Name="GameBall"
+                    BorderBrush="Black" 
+                    BorderThickness="1"
+                    Height="{Binding GameAttr.PongBall.Side}"
+                    Width="{Binding ElementName=GameBall, Path=Height}" 
+                    Canvas.Left="{Binding GameAttr.ObjectsPos.Ball.X}"
+                    Canvas.Top="{Binding GameAttr.ObjectsPos.Ball.Y}">
+                </Border>
+            </Canvas>
+        </StackPanel>
+    </Grid>
+</Window>
