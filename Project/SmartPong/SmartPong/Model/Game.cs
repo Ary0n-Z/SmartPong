@@ -35,31 +35,32 @@ namespace SmartPong.Model
         public string Score{
             get => string.Format("{0} : {1}", scorePlayer, scoreNewralNetwork);
         }
-
-        //Game engine
-        //Newral Network
-        public Game()
+        public event Action Game_Tick;
+        private GameEngine gameEngine;
+            //Newral Network
+        public Game(Action action)
         {
+            Game_Tick += action;
+            gameEngine = new GameEngine();
             GameAttributes = new GameAttributes();
             //Timer setup
-            gameTimer.Interval = 500;// 0.5 seconds
+            gameTimer.Interval = 100;
             gameTimer.Elapsed += GameTimerElapsed;
             gameTimer.Enabled = true;
         }
-        public void ResizeGameObjects(double x, double y)//param = Field new size
-        {
+        public void FieldResize(double x, double y){
             var paddleW = x * 0.03;
             var paddleH = y * 0.5;
             if (!init)
             {
-                GameAttributes.ObjectsPos.Ball.X = x / 2.0;
-                GameAttributes.ObjectsPos.Ball.Y = y / 2.0;
+                GameAttributes.PongBall.X = x / 2.0;
+                GameAttributes.PongBall.Y = y / 2.0;
 
-                GameAttributes.ObjectsPos.PlayerPaddle.X = x * 0.01;
-                GameAttributes.ObjectsPos.PlayerPaddle.Y = y / 3.0;
+                GameAttributes.PlayerPaddle.X = x * 0.01;
+                GameAttributes.PlayerPaddle.Y = y / 3.0;
 
-                GameAttributes.ObjectsPos.NNPadle.X = (x * 0.99) - paddleW;
-                GameAttributes.ObjectsPos.NNPadle.Y = y / 3.0;
+                GameAttributes.NewralNetworkPaddle.X = (x * 0.99) - paddleW;
+                GameAttributes.NewralNetworkPaddle.Y = y / 3.0;
 
                 GameAttributes.PongField.Width = x;
                 GameAttributes.PongField.Height = y;
@@ -70,25 +71,54 @@ namespace SmartPong.Model
             var koefY = (y/GameAttributes.PongField.Height);
             //Ball configuration
             GameAttributes.PongBall.Side = x * 0.02;
-            GameAttributes.ObjectsPos.Ball.X *= koefX; 
-            GameAttributes.ObjectsPos.Ball.Y *= koefY;
+            GameAttributes.PongBall.X *= koefX; 
+            GameAttributes.PongBall.Y *= koefY;
             //Player paddle configuration
             GameAttributes.PlayerPaddle.Width = paddleW;
             GameAttributes.PlayerPaddle.Height = paddleH;
-            GameAttributes.ObjectsPos.PlayerPaddle.X *= koefX;
-            GameAttributes.ObjectsPos.PlayerPaddle.Y *= koefY;
+            GameAttributes.PlayerPaddle.X *= koefX;
+            GameAttributes.PlayerPaddle.Y *= koefY;
             //NN paddle configuration
             GameAttributes.NewralNetworkPaddle.Width = paddleW;
             GameAttributes.NewralNetworkPaddle.Height = paddleH;
-            GameAttributes.ObjectsPos.NNPadle.X *= koefX;
-            GameAttributes.ObjectsPos.NNPadle.Y *= koefY;
+            GameAttributes.NewralNetworkPaddle.X *= koefX;
+            GameAttributes.NewralNetworkPaddle.Y *= koefY;
             //Field 
             GameAttributes.PongField.Height = y;
             GameAttributes.PongField.Width = x;
         }
+        public void MovePlayerPaddle(int i)
+        {
+            if (i == 0)
+                gameEngine.MovePaddle(GameAttributes.PlayerPaddle, GameAttributes.PongField, GameEngine.Direction.Up);
+            else
+                gameEngine.MovePaddle(GameAttributes.PlayerPaddle, GameAttributes.PongField, GameEngine.Direction.Down);
+
+         }
         private void GameTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            //TODO::
+            var winner = gameEngine.NextFrame(
+                GameAttributes.PongBall, 
+                GameAttributes.PongField,
+                GameAttributes.PlayerPaddle,
+                GameAttributes.NewralNetworkPaddle );
+            switch (winner)
+            {
+                case GameEngine.Winner.P1:
+                    scorePlayer += 1;
+                    gameTimer.Stop();
+                    break;
+                case GameEngine.Winner.P2:
+                    scoreNewralNetwork +=1;
+                    gameTimer.Stop();
+                    break;
+                case GameEngine.Winner.NONE:
+                    break;
+                default:
+                    break;
+            }
+            Game_Tick?.Invoke();
+
         }
         public void ChangeGameState(GameStats state)
         {

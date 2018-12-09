@@ -7,11 +7,10 @@ namespace SmartPong.Model.GameObjects
         {
             PongField = new Field();
             PongBall = new Ball();
+            PongBall.Angle = 180;
             PlayerPaddle = new Paddle();
             NewralNetworkPaddle = new Paddle();
-            ObjectsPos = new ObjPositions();
         }
-        public ObjPositions ObjectsPos { get; set; }
         public Ball PongBall { get; set; }
         public Field PongField { get; }
         public Paddle PlayerPaddle { get; set; }

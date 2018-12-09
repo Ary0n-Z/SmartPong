@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace SmartPong.Model.GameObjects
 {
-    public class Paddle : GameRect
+    public abstract class GameObj
     {
-       
+        public double X { get; set; }
+        public double Y { get; set; }
+
     }
 }

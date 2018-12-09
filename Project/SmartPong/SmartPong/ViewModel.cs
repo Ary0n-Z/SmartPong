@@ -24,11 +24,14 @@ namespace SmartPong
        
         public ViewModel()
         {
-            model = new Game();
+            model = new Game(
+                ()=>
+                OnPropertyChanged("GameAttr")
+                );
         }
         public void ResizeEvent(double x, double y)
         {
-            model.ResizeGameObjects(x,y);
+            model.FieldResize(x,y);
             OnPropertyChanged("GameAttr");
         }
         public RelayCommand ArrowUpCommand
@@ -37,7 +40,8 @@ namespace SmartPong
                 if (arrowUpCommand == null) {
                     arrowUpCommand = new RelayCommand(
                         () => {
-                           //TODO::
+                            model.MovePlayerPaddle(0);
+                            OnPropertyChanged("GameAttr");
                         }
                         );
                 }
@@ -51,7 +55,8 @@ namespace SmartPong
                 {
                     arrowDownCommand = new RelayCommand(
                         () => {
-                            //TODO::
+                            model.MovePlayerPaddle(1);
+                            OnPropertyChanged("GameAttr");
                         }
                         );
                 }

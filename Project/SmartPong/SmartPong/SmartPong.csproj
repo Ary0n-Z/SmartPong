@@ -56,14 +56,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\Game.cs" />
+    <Compile Include="Model\GameEngine.cs" />
     <Compile Include="Model\GameObjects\Ball.cs" />
     <Compile Include="Model\GameObjects\Field.cs" />
     <Compile Include="Model\GameObjects\GameAttributes.cs" />
     <Compile Include="INotifyObject.cs" />
-    <Compile Include="Model\GameObjects\ObjPositions.cs" />
+    <Compile Include="Model\GameObjects\GameObj.cs" />
+    <Compile Include="Model\GameObjects\GameRect.cs" />
     <Compile Include="Model\GameObjects\Paddle.cs" />
     <Compile Include="Model\GameObjects\Point.cs" />
-    <Compile Include="Model\GameObjects\Rect.cs" />
+    <Compile Include="Model\GameObjects\IRect.cs" />
     <Compile Include="ParamRelayCommand.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="ViewModel.cs" />

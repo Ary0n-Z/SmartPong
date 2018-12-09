@@ -1,9 +1,10 @@
 ﻿
 namespace SmartPong.Model.GameObjects
 {
-    public class Ball
+    public class Ball : GameRect
     {
-        public double Side { get; set; }
+        public double Side { get => Width; set { Width = value; Height = value; } }
         public double Angle { get; set; }
+
     }
 }

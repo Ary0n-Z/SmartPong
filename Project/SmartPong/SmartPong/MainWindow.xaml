@@ -41,23 +41,23 @@
                     BorderThickness="1"
                     Height="{Binding GameAttr.PlayerPaddle.Height}"
                     Width="{Binding GameAttr.PlayerPaddle.Width}"
-                    Canvas.Left="{Binding GameAttr.ObjectsPos.PlayerPaddle.X}" 
-                    Canvas.Top="{Binding GameAttr.ObjectsPos.PlayerPaddle.Y}"/>
+                    Canvas.Left="{Binding GameAttr.PlayerPaddle.X}" 
+                    Canvas.Top="{Binding GameAttr.PlayerPaddle.Y}"/>
                 <Border 
                     BorderBrush="Black" 
                     BorderThickness="1"
                     Height="{Binding GameAttr.NewralNetworkPaddle.Height}"
                     Width="{Binding GameAttr.NewralNetworkPaddle.Width}"
-                    Canvas.Left="{Binding GameAttr.ObjectsPos.NNPadle.X}" 
-                    Canvas.Top="{Binding GameAttr.ObjectsPos.NNPadle.Y}"/>
+                    Canvas.Left="{Binding GameAttr.NewralNetworkPaddle.X}" 
+                    Canvas.Top="{Binding GameAttr.NewralNetworkPaddle.Y}"/>
                 <Border 
                     x:Name="GameBall"
                     BorderBrush="Black" 
                     BorderThickness="1"
                     Height="{Binding GameAttr.PongBall.Side}"
                     Width="{Binding ElementName=GameBall, Path=Height}" 
-                    Canvas.Left="{Binding GameAttr.ObjectsPos.Ball.X}"
-                    Canvas.Top="{Binding GameAttr.ObjectsPos.Ball.Y}">
+                    Canvas.Left="{Binding GameAttr.PongBall.X}"
+                    Canvas.Top="{Binding GameAttr.PongBall.Y}">
                 </Border>
             </Canvas>
         </StackPanel>

@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace SmartPong.Model.GameObjects
 {
-    public class Field : Rect
+    public class Field : IRect
     {
+        public double Width { get; set; }
+        public double Height { get; set; }
     }
 }
