@@ -1,10 +1,6 @@
 ﻿using SmartPong.Model.GameObjects;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartPong.Model
 {
@@ -31,29 +27,37 @@ namespace SmartPong.Model
         }
         public Winner NextFrame(Ball ball, Field field, Paddle playerPaddle,Paddle nnPadle)
         {
-            if(ball.Angle == -180)
+          
+            //Field physics
+            if(field.Height < ball.RightBottom.Y || 0 > ball.Y)
+                ball.Angle *= -1;
+            //Win conditions
+            if (field.Width < ball.RightBottom.X)
+                return Winner.P1;
+            if (0 > ball.X)
+                return Winner.P2;
+            //Player paddle
+            if (playerPaddle.RightBottom.X > ball.X
+                && playerPaddle.LeftTop.Y < ball.RightBottom.Y
+                && playerPaddle.RightBottom.Y > ball.Y)
             {
-                int a = 5;
+                double k = (playerPaddle.Height - (ball.Y-playerPaddle.Y))/ playerPaddle.Height;
+                ball.Angle = 90 - 180*k;
             }
+            //NN paddle
+            if (nnPadle.X < ball.RightBottom.X
+                && nnPadle.Y < ball.RightBottom.Y
+                && nnPadle.RightBottom.Y > ball.Y)
+            {
+                double k = (nnPadle.Height - (ball.Y - nnPadle.Y)) / nnPadle.Height;
+                ball.Angle = -270 + 180 * k;
+            }
+
             double angleRag = (ball.Angle * Math.PI) / 180;
-            double dx = Math.Cos(angleRag) * (field.Width * 0.005);
-            double dy = Math.Sin(angleRag) * (field.Height * 0.005);
+            double dx = Math.Cos(angleRag) * (field.Width * 0.008);
+            double dy = Math.Sin(angleRag) * (field.Height * 0.008);
             ball.X += dx;
             ball.Y += dy;
-            ////Field top / bottom border
-            //if( ball.Y < 0 || ((ball.Y + ball.Side) > field.Height) )
-            //{
-            //    ball.Angle = -ball.Angle;
-            //}
-            ////left / right border
-            //if( ball.X < 0)
-            //    return Winner.P1;
-            //if(ball.X > field.Width)
-            //    return Winner.P2;
-            //// Paddle
-            PaddleCollision(ball, playerPaddle);
-           // PaddleCollision(ball, nnPadle);
-
             return Winner.NONE;
         }
         static int i = 0;

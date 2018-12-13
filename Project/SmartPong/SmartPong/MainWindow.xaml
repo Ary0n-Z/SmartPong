@@ -17,9 +17,49 @@
             <ColumnDefinition Width="1*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="10*"></RowDefinition>
-            <RowDefinition Height="90*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0"
+                    Grid.Column="0"
+                    >
+            <Menu IsMainMenu="True" DockPanel.Dock="Left">
+                <MenuItem Header="Game">
+                    <MenuItem Header="Start/Continue" Command="{Binding StartContinueCommand}"></MenuItem>
+                    <MenuItem Header="Pause" Command="{Binding PauseCommand}"></MenuItem>
+                    <MenuItem Header="Stop" Command="{Binding StopCommand}"></MenuItem>
+                    <MenuItem Header="Quit" Command="{Binding QuitCommand}"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Neural Network">
+                    <MenuItem Header="Enable [+]"></MenuItem>
+                    <MenuItem Header="Load model">
+                        <MenuItem Header="Easy"></MenuItem>
+                        <MenuItem Header="Normal"></MenuItem>
+                        <MenuItem Header="Hard"></MenuItem>
+                        <MenuItem Header="Load from file"></MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="Enable [+]"></MenuItem>
+                </MenuItem>
+            </Menu>
+            
+            <Label DockPanel.Dock="Right" 
+                   Content="{Binding GameAttr.Score}" 
+                   HorizontalAlignment="Right"
+                   Background="WhiteSmoke"></Label>
+            <Label DockPanel.Dock="Right" 
+                   Content="Score:" 
+                   HorizontalAlignment="Right"
+                   Background="WhiteSmoke"></Label>
+            <Label DockPanel.Dock="Right" 
+                   Content="{Binding GameState}" 
+                   HorizontalAlignment="Right"
+                   Background="WhiteSmoke"></Label>
+            <Label DockPanel.Dock="Right" 
+                   Content="State: " 
+                   HorizontalAlignment="Right"
+                   Background="WhiteSmoke"></Label>
+
+        </DockPanel>
         <StackPanel x:Name="GameField" 
                     MouseDown="GetGameFieldFocus"
                     SizeChanged="GameFieldSizeChanged"

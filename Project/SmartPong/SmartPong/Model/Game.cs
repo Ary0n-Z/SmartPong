@@ -9,32 +9,27 @@ namespace SmartPong.Model
     {
         private bool init = false;
         private Timer gameTimer = new Timer();
-        public enum GameStats { Running = 0, Paused = 1, Stoped = 2, Finished = 3 }
-        private GameStats gameState = GameStats.Stoped;
-        private byte scoreNewralNetwork = 0;
-        private byte scorePlayer = 0;
-
-
-        public string GameState { get
-            {
-                switch (gameState)
+        public enum GameCommands { Start, Pause,Stop,Continue};
+        public enum GameState { Started,Paused,Stopped};
+        public GameState State { get; private set; }
+        public string StateString { get {
+                string state = "";
+                switch (State)
                 {
-                    case GameStats.Running:
-                        return "Running";
-                    case GameStats.Paused:
-                        return "Paused";
-                    case GameStats.Stoped:
-                        return "Stoped";
-                    case GameStats.Finished:
-                        return "Finished";
-                    default:
-                        return "Unkown";
+                    case GameState.Started:
+                        state = "Started";
+                        break;
+                    case GameState.Paused:
+                        state = "Paused";
+                        break;
+                    case GameState.Stopped:
+                        state = "Stopped";
+                        break;
                 }
+                return state;
             } }
+
         public GameAttributes GameAttributes { get; set; }
-        public string Score{
-            get => string.Format("{0} : {1}", scorePlayer, scoreNewralNetwork);
-        }
         public event Action Game_Tick;
         private GameEngine gameEngine;
             //Newral Network
@@ -44,29 +39,19 @@ namespace SmartPong.Model
             gameEngine = new GameEngine();
             GameAttributes = new GameAttributes();
             //Timer setup
-            gameTimer.Interval = 100;
+            gameTimer.Interval = 50;
             gameTimer.Elapsed += GameTimerElapsed;
-            gameTimer.Enabled = true;
+            gameTimer.Enabled = false;
+            State = GameState.Stopped;
         }
         public void FieldResize(double x, double y){
             var paddleW = x * 0.03;
-            var paddleH = y * 0.5;
+            var paddleH = y * 0.3;
             if (!init)
             {
-                GameAttributes.PongBall.X = x / 2.0;
-                GameAttributes.PongBall.Y = y / 2.0;
-
-                GameAttributes.PlayerPaddle.X = x * 0.01;
-                GameAttributes.PlayerPaddle.Y = y / 3.0;
-
-                GameAttributes.NewralNetworkPaddle.X = (x * 0.99) - paddleW;
-                GameAttributes.NewralNetworkPaddle.Y = y / 3.0;
-
-                GameAttributes.PongField.Width = x;
-                GameAttributes.PongField.Height = y;
+                InitGame(x,y);
                 init = true;
             }
-
             var koefX = (x/GameAttributes.PongField.Width);
             var koefY = (y/GameAttributes.PongField.Height);
             //Ball configuration
@@ -105,24 +90,66 @@ namespace SmartPong.Model
             switch (winner)
             {
                 case GameEngine.Winner.P1:
-                    scorePlayer += 1;
-                    gameTimer.Stop();
+                    GameAttributes.ScorePlayer += 1;
+                    InitGame(GameAttributes.PongField.Width,GameAttributes.PongField.Height);
+                    GameAttributes.PongBall.Angle = 0;
                     break;
                 case GameEngine.Winner.P2:
-                    scoreNewralNetwork +=1;
-                    gameTimer.Stop();
+                    GameAttributes.ScoreNewralNetwork += 1;
+                    InitGame(GameAttributes.PongField.Width, GameAttributes.PongField.Height);
+                    GameAttributes.PongBall.Angle = 180;
                     break;
                 case GameEngine.Winner.NONE:
-                    break;
-                default:
                     break;
             }
             Game_Tick?.Invoke();
 
         }
-        public void ChangeGameState(GameStats state)
+
+        private void InitGame(double x, double y)
         {
-            //TODO::
+            var paddleW = x * 0.03;
+
+            GameAttributes.PongBall.X = x / 2.0;
+            GameAttributes.PongBall.Y = y / 2.0;
+
+            GameAttributes.PlayerPaddle.X = x * 0.01;
+            GameAttributes.PlayerPaddle.Y = y / 3.0;
+
+            GameAttributes.NewralNetworkPaddle.X = (x * 0.99) - paddleW;
+            GameAttributes.NewralNetworkPaddle.Y = y / 3.0;
+
+            GameAttributes.PongField.Width = x;
+            GameAttributes.PongField.Height = y;
+        }
+
+        public void ChangeGameState(GameCommands cmd)
+        {
+            switch (cmd)
+            {
+                case GameCommands.Start:
+                    InitGame(GameAttributes.PongField.Width, GameAttributes.PongField.Height);
+                    GameAttributes.ScorePlayer = 0;
+                    GameAttributes.ScoreNewralNetwork = 0;
+                    State = GameState.Started;
+                    gameTimer.Enabled = true;
+                    break;
+                case GameCommands.Pause:
+                    State = GameState.Paused;
+                    gameTimer.Enabled = false;
+                    break;
+                case GameCommands.Stop:
+                    State = GameState.Stopped;
+                    gameTimer.Enabled = false;
+                    InitGame(GameAttributes.PongField.Width, GameAttributes.PongField.Height);
+                    break;
+                case GameCommands.Continue:
+                    State = GameState.Started;
+                    gameTimer.Enabled = true;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

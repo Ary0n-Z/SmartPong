@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SmartPong
 {
@@ -13,7 +14,18 @@ namespace SmartPong
         private Game model;
         private RelayCommand arrowDownCommand;
         private RelayCommand arrowUpCommand;
+        private RelayCommand startContinueCommand;
 
+        private RelayCommand pauseCommand;
+        private RelayCommand stopCommand;
+        private RelayCommand quitCommand;
+
+        public string GameState
+        {
+            get {
+                return model.StateString;
+            }
+        }
         public GameAttributes GameAttr
         {
             get
@@ -47,6 +59,7 @@ namespace SmartPong
                 }
                 return arrowUpCommand;
             } }
+
         public RelayCommand ArrowDownCommand
         {
             get
@@ -61,6 +74,58 @@ namespace SmartPong
                         );
                 }
                 return arrowDownCommand;
+            }
+        }
+        public RelayCommand StartContinueCommand
+        {
+            get
+            {
+                return startContinueCommand != null ? startContinueCommand : startContinueCommand = new RelayCommand(
+                    () =>
+                    {
+                        if(model.State == Game.GameState.Paused)
+                            model.ChangeGameState(Game.GameCommands.Continue);
+                        else
+                            model.ChangeGameState(Game.GameCommands.Start);
+                        OnPropertyChanged("GameState");
+                    }
+                    );
+            }
+        }
+
+        public RelayCommand PauseCommand { get {
+                return pauseCommand != null ? pauseCommand : pauseCommand = new RelayCommand(
+                    () =>
+                    {
+                        model.ChangeGameState(Game.GameCommands.Pause);
+                        OnPropertyChanged("GameState");
+                    }
+                    );
+            }
+        }
+        public RelayCommand StopCommand
+        {
+            get
+            {
+                return stopCommand != null ? stopCommand : stopCommand = new RelayCommand(
+                    () =>
+                    {
+                        model.ChangeGameState(Game.GameCommands.Stop);
+                        OnPropertyChanged("GameState");
+                    }
+                    );
+            }
+        }
+        public RelayCommand QuitCommand
+        {
+            get
+            {
+                return quitCommand != null ? quitCommand : quitCommand = new RelayCommand(
+                    () =>
+                    {
+                        Application.Current.MainWindow.Close();
+                    }
+                    );
             }
         }
     }
