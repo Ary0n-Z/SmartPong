@@ -32,14 +32,16 @@ namespace SmartPong.Model
         public GameAttributes GameAttributes { get; set; }
         public event Action Game_Tick;
         private GameEngine gameEngine;
+        private NeuralNetwork neuralNetwork;
             //Newral Network
         public Game(Action action)
         {
             Game_Tick += action;
             gameEngine = new GameEngine();
+            neuralNetwork = new NeuralNetwork();
             GameAttributes = new GameAttributes();
             //Timer setup
-            gameTimer.Interval = 50;
+            gameTimer.Interval = 5;
             gameTimer.Elapsed += GameTimerElapsed;
             gameTimer.Enabled = false;
             State = GameState.Stopped;
@@ -79,9 +81,19 @@ namespace SmartPong.Model
             else
                 gameEngine.MovePaddle(GameAttributes.PlayerPaddle, GameAttributes.PongField, GameEngine.Direction.Down);
 
-         }
+        }
+        private void MoveNeuralPaddleUp()
+        {
+            gameEngine.MovePaddle(GameAttributes.NewralNetworkPaddle, GameAttributes.PongField, GameEngine.Direction.Up);
+        }
+        private void MoveNeuralPaddleDown()
+        {
+            gameEngine.MovePaddle(GameAttributes.NewralNetworkPaddle, GameAttributes.PongField, GameEngine.Direction.Down);
+        }
         private void GameTimerElapsed(object sender, ElapsedEventArgs e)
         {
+            neuralNetwork.Run(GameAttributes.PongBall.Y, GameAttributes.NewralNetworkPaddle.Y, MoveNeuralPaddleUp, MoveNeuralPaddleDown);
+
             var winner = gameEngine.NextFrame(
                 GameAttributes.PongBall, 
                 GameAttributes.PongField,
