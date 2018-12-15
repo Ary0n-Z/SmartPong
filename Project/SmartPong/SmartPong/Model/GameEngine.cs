@@ -27,9 +27,14 @@ namespace SmartPong.Model
         }
         public Winner NextFrame(Ball ball, Field field, Paddle playerPaddle,Paddle nnPadle)
         {
-          
+            double angleRag = (ball.Angle * Math.PI) / 180;
+            double dx = Math.Cos(angleRag) * (field.Width * 0.008);
+            double dy = Math.Sin(angleRag) * (field.Height * 0.008);
+            ball.X += dx;
+            ball.Y += dy;
+
             //Field physics
-            if(field.Height < ball.RightBottom.Y || 0 > ball.Y)
+            if (field.Height < ball.RightBottom.Y || 0 > ball.Y)
                 ball.Angle *= -1;
             //Win conditions
             if (field.Width < ball.RightBottom.X)
@@ -43,6 +48,7 @@ namespace SmartPong.Model
             {
                 double k = (playerPaddle.Height - (ball.Y-playerPaddle.Y))/ playerPaddle.Height;
                 ball.Angle = 90 - 180*k;
+                ball.X = playerPaddle.X + playerPaddle.Width;
             }
             //NN paddle
             if (nnPadle.X < ball.RightBottom.X
@@ -51,13 +57,9 @@ namespace SmartPong.Model
             {
                 double k = (nnPadle.Height - (ball.Y - nnPadle.Y)) / nnPadle.Height;
                 ball.Angle = -270 + 180 * k;
+                ball.X = nnPadle.X - ball.Width;
             }
 
-            double angleRag = (ball.Angle * Math.PI) / 180;
-            double dx = Math.Cos(angleRag) * (field.Width * 0.008);
-            double dy = Math.Sin(angleRag) * (field.Height * 0.008);
-            ball.X += dx;
-            ball.Y += dy;
             return Winner.NONE;
         }
         static int i = 0;
