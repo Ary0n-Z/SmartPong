@@ -9,10 +9,14 @@ namespace SmartPong.Model
     {
         private bool init = false;
         private Timer gameTimer = new Timer();
-        public enum GameCommands { Start, Pause,Stop,Continue};
-        public enum GameState { Started,Paused,Stopped};
+        public enum GameCommands { Start, Pause, Stop, Continue };
+
+        public enum GameState { Started, Paused, Stopped };
         public GameState State { get; private set; }
-        public string StateString { get {
+        public string StateString
+        {
+            get
+            {
                 string state = "";
                 switch (State)
                 {
@@ -27,13 +31,24 @@ namespace SmartPong.Model
                         break;
                 }
                 return state;
-            } }
+            }
+        }
+
+        public enum NeuralNetworkState { Enabled, Disabled };
+        public NeuralNetworkState NNState { get; private set; }
+        public string NNStateString
+        {
+            get
+            {
+                return NNState.ToString();
+            }
+        }
 
         public GameAttributes GameAttributes { get; set; }
         public event Action Game_Tick;
         private GameEngine gameEngine;
         private NeuralNetwork neuralNetwork;
-            //Newral Network
+        //Newral Network
         public Game(Action action)
         {
             Game_Tick += action;
@@ -45,20 +60,22 @@ namespace SmartPong.Model
             gameTimer.Elapsed += GameTimerElapsed;
             gameTimer.Enabled = false;
             State = GameState.Stopped;
+            NNState = NeuralNetworkState.Enabled;
         }
-        public void FieldResize(double x, double y){
+        public void FieldResize(double x, double y)
+        {
             var paddleW = x * 0.03;
             var paddleH = y * 0.3;
             if (!init)
             {
-                InitGame(x,y);
+                InitGame(x, y);
                 init = true;
             }
-            var koefX = (x/GameAttributes.PongField.Width);
-            var koefY = (y/GameAttributes.PongField.Height);
+            var koefX = (x / GameAttributes.PongField.Width);
+            var koefY = (y / GameAttributes.PongField.Height);
             //Ball configuration
             GameAttributes.PongBall.Side = x * 0.02;
-            GameAttributes.PongBall.X *= koefX; 
+            GameAttributes.PongBall.X *= koefX;
             GameAttributes.PongBall.Y *= koefY;
             //Player paddle configuration
             GameAttributes.PlayerPaddle.Width = paddleW;
@@ -92,18 +109,19 @@ namespace SmartPong.Model
         }
         private void GameTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            neuralNetwork.Run(GameAttributes.PongBall.Y, GameAttributes.NewralNetworkPaddle.Y, MoveNeuralPaddleUp, MoveNeuralPaddleDown);
+            if (NNState == NeuralNetworkState.Enabled)
+                neuralNetwork.Run(GameAttributes.PongBall.Y, GameAttributes.NewralNetworkPaddle.Y, MoveNeuralPaddleUp, MoveNeuralPaddleDown);
 
             var winner = gameEngine.NextFrame(
-                GameAttributes.PongBall, 
+                GameAttributes.PongBall,
                 GameAttributes.PongField,
                 GameAttributes.PlayerPaddle,
-                GameAttributes.NewralNetworkPaddle );
+                GameAttributes.NewralNetworkPaddle);
             switch (winner)
             {
                 case GameEngine.Winner.P1:
                     GameAttributes.ScorePlayer += 1;
-                    InitGame(GameAttributes.PongField.Width,GameAttributes.PongField.Height);
+                    InitGame(GameAttributes.PongField.Width, GameAttributes.PongField.Height);
                     GameAttributes.PongBall.Angle = 0;
                     break;
                 case GameEngine.Winner.P2:
@@ -162,6 +180,11 @@ namespace SmartPong.Model
                 default:
                     break;
             }
+        }
+
+        public void ChangeNNState(NeuralNetworkState state)
+        {
+            NNState = state;
         }
     }
 }

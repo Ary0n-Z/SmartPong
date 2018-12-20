@@ -15,6 +15,7 @@ namespace SmartPong
         private RelayCommand arrowDownCommand;
         private RelayCommand arrowUpCommand;
         private RelayCommand startContinueCommand;
+        private RelayCommand nnEnableDisableCommand;
 
         private RelayCommand pauseCommand;
         private RelayCommand stopCommand;
@@ -24,6 +25,13 @@ namespace SmartPong
         {
             get {
                 return model.StateString;
+            }
+        }
+        public string NNState
+        {
+            get
+            {
+                return model.NNStateString;
             }
         }
         public GameAttributes GameAttr
@@ -88,6 +96,23 @@ namespace SmartPong
                         else
                             model.ChangeGameState(Game.GameCommands.Start);
                         OnPropertyChanged("GameState");
+                    }
+                    );
+            }
+        }
+
+        public RelayCommand NNEnableDisableCommand
+        {
+            get
+            {
+                return nnEnableDisableCommand != null ? nnEnableDisableCommand : nnEnableDisableCommand = new RelayCommand(
+                    () =>
+                    {
+                        if (model.NNState == Game.NeuralNetworkState.Disabled)
+                            model.ChangeNNState(Game.NeuralNetworkState.Enabled);
+                        else
+                            model.ChangeNNState(Game.NeuralNetworkState.Disabled);
+                        OnPropertyChanged("NNState");
                     }
                     );
             }
