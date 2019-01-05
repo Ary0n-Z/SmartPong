@@ -1,5 +1,5 @@
 # SmartPong
-## Current phase: Construction phase
+## Current phase: Test phase
 
 Coursework for technology of software engineering
 
